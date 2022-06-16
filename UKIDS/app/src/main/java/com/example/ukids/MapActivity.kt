@@ -74,7 +74,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         }
     }
 
-    override fun onMapReady(p0: GoogleMap?) {
+    override fun onMapReady(p0: GoogleMap) {
         googleMap = p0
 
         /*
