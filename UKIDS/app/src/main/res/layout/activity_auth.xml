@@ -63,4 +63,12 @@
         android:textStyle="bold"
         android:id="@+id/loginBtn"
         android:layout_marginTop="20dp" />
+
+    <!--카카오 로그인-->
+    <ImageButton
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_kakao_login"
+        android:src="@drawable/kakao_login_medium_wide"/>
 </LinearLayout>

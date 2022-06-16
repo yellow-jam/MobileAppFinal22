@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.example.ukids.databinding.ActivityMainBinding
+import com.kakao.sdk.common.util.Utility
 
 class MainActivity : AppCompatActivity() {
     private lateinit var intent1: Intent
@@ -17,6 +18,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+       // 카카오 로그인 해시 키 구하기
+       val keyHash = Utility.getKeyHash(this)
+       Log.d("mobileApp", keyHash)
 
 
         // 11-6 액션바드로어 토글
@@ -51,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     // AuthActivity에서 돌아온 후
     override fun onStart() {
         super.onStart()
-        if(MyApplication.checkAuth()){  // 검증된 이메일인가
+        if(MyApplication.checkAuth() || MyApplication.email != null){ // 검증된 이메일인가
             // 로그인 상태
             binding.btnAuth.text = "로그아웃"
             //binding.authTv.text = "${MyApplication.email}님 반갑습니다."
