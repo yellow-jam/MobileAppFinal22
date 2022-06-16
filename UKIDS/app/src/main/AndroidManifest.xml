@@ -15,7 +15,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.UKIDS">
+        android:theme="@style/Theme.UKIDS"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
         <activity
             android:name=".AuthActivity"
             android:exported="false" />
@@ -42,19 +46,21 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!--카카오 로그인-->
-        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+        </activity> <!-- 카카오 로그인 -->
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="oauth"
+
+                <data
+                    android:host="oauth"
                     android:scheme="kakaoc01ce673ace62c3000d15249f118e843" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.example.ukids
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import com.example.ukids.databinding.ActivityMapBinding
 import com.google.android.gms.common.ConnectionResult
@@ -127,8 +129,27 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
-        menu?.add(0, 11111, 0, "위성지도")
-        menu?.add(0, 22222, 0, "일반지도")
+//        menu?.add(0, 11111, 0, "위성지도")
+//        menu?.add(0, 22222, 0, "일반지도")
+        menuInflater.inflate(R.menu.map_menu, menu) // 두 번째 - 어디에 적용할 것인지: 옵션메뉴에 적용하겠다 menu
+
+        // 액션 뷰 이용: SearchView - map_menu.xml
+        val menuSearch = menu?.findItem(R.id.menu_search)
+        val searchView = menuSearch?.actionView as SearchView
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+//                binding.tv1.text = p0
+                val intent1 = Intent(this@MapActivity, SearchActivity::class.java)
+                intent.putExtra("search", p0)
+                startActivity(intent1)
+                return true
+            }
+        })
+
         return true
     }
 

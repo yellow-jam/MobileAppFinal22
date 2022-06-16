@@ -5,9 +5,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.common.KakaoSdk
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MyApplication: MultiDexApplication() {
     companion object{
+        /* auth */
         lateinit var auth: FirebaseAuth
         var email: String? = null
 
@@ -20,8 +25,38 @@ class MyApplication: MultiDexApplication() {
                 false
             }
         }
-    }
 
+        /* 공공데이터 요청 */
+        //var networkServiceJSON : NetworkService
+        var networkServiceXml : NetworkService
+
+        /*
+        val retrofitJSON : Retrofit
+            get() = Retrofit.Builder()
+                .baseUrl("")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        */
+
+        val parser = TikXml.Builder().exceptionOnUnreadXml(false).build()
+        val retrofitXml : Retrofit
+            get() = Retrofit.Builder()
+                .baseUrl("https://openapi.gg.go.kr/")
+                .addConverterFactory(TikXmlConverterFactory.create(parser))
+                .build()
+        init{
+            //networkServiceJSON = retrofitJSON.create(NetworkService::class.java)
+            networkServiceXml = retrofitXml.create(NetworkService::class.java)
+        }
+
+
+
+
+
+
+
+
+    }
 
 
     override fun onCreate() {
