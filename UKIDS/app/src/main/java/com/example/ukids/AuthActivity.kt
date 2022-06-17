@@ -1,5 +1,6 @@
 package com.example.ukids
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -65,6 +66,7 @@ class AuthActivity : AppCompatActivity() {
                         // 사용자가 이메일 인증을 했는지 확인 -> MyApplication에서 담당
                         if(MyApplication.checkAuth()){
                             MyApplication.email = email
+                            startActivity(Intent(this@AuthActivity, MainActivity::class.java))
                             finish()  // 메인액티비티로 돌아감
                         }
                         else {
@@ -93,6 +95,7 @@ class AuthActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, "로그아웃 성공", Toast.LENGTH_SHORT).show()
                 }
             }
+            startActivity(Intent(this@AuthActivity, SplashActivity::class.java))
             finish()  // 메인액티비티로 돌아감
         }
 
@@ -106,6 +109,7 @@ class AuthActivity : AppCompatActivity() {
                 }
                 else if (tokenInfo != null) {
                     Log.i("mobileApp", "토큰 정보 보기 성공")
+                    startActivity(Intent(this@AuthActivity, MainActivity::class.java))
                     finish()  // 메인액티비티로 돌아감 (Auth액티비티 종료)
                 }
             }
@@ -135,6 +139,7 @@ class AuthActivity : AppCompatActivity() {
                             var scopes = mutableListOf<String>()
                             if(user.kakaoAccount?.email != null){  // 이메일을 가져왔다면
                                 MyApplication.email = user.kakaoAccount?.email
+                                startActivity(Intent(this@AuthActivity, MainActivity::class.java))
                                 finish()  // MainActivity로 돌아감
                             }
                             else if(user.kakaoAccount?.emailNeedsAgreement == true){ // 이메일 정보를 가져오는 데에 사용자에게 추가적인 동의를 받아야 한다면

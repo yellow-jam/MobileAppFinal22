@@ -102,6 +102,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         p0.getUiSettings().setCompassEnabled(true);
         p0.getUiSettings().setMapToolbarEnabled(true);
 
+        // 마커가 클릭되면 하단의 스크롤뷰에 상세정보를 띄운다
         var index: Int = 0
         googleMap!!.setOnMarkerClickListener(object :GoogleMap.OnMarkerClickListener{
             override fun onMarkerClick(p0: Marker): Boolean {

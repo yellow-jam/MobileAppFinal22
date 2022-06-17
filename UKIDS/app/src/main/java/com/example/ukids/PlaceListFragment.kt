@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukids.databinding.FragmentPlaceListBinding
+import com.google.android.material.chip.ChipGroup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +30,8 @@ class PlaceListFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var myData = mutableListOf<myRow>()
+    var playground = arrayListOf<myRow>()
+    var kidscafe = arrayListOf<myRow>()
     private lateinit var binding: FragmentPlaceListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +41,22 @@ class PlaceListFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
+        getData()
+
+        for (i in 0 until myData.size) {
+            if (myData[i].placetype=="놀이터"){
+                playground.add(myData[i])
+            }
+        }
+
+        for (i in 0 until myData.size) {
+            if (myData[i].placetype=="키즈카페"){
+                kidscafe.add(myData[i])
+            }
+        }
+    }
+
+    fun getData() {
         // XML 데이터 가져오기
         val call1: Call<responseInfo1> = MyApplication.networkServiceXml.getXmlList(
             "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
@@ -127,6 +147,30 @@ class PlaceListFragment : Fragment() {
         binding = FragmentPlaceListBinding.inflate(inflater, container, false)
 
         //val returnType = arguments?.getString("returnType")
+
+
+        // 필터링 안됨
+        binding.placelistChipgroup.setOnCheckedStateChangeListener(
+            object : ChipGroup.OnCheckedStateChangeListener {
+                override fun onCheckedChanged(group: ChipGroup, checkedIds: MutableList<Int>) {
+                    var resarr = arrayListOf<myRow>()
+                    if (binding.placelistPlayground.isChecked) {
+                        Log.d("mobileApp", "놀이터 선택")
+                        resarr.addAll(playground)
+                    }
+                    if (binding.placelistKidscafe.isChecked) {
+                        Log.d("mobileApp", "키즈카페 선택")
+                        resarr.addAll(kidscafe)
+                    }
+                    binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
+                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), resarr)
+                    (binding.PlaceListRecyclerView.adapter)!!.notifyDataSetChanged()
+
+                }
+            }
+
+        )
+
 
         return binding.root
     }
