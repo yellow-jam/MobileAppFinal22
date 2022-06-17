@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,6 +36,7 @@ import retrofit2.Response
 class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener{
+    lateinit var binding: ActivityMapBinding
     lateinit var toggle : ActionBarDrawerToggle // 11-6 액션바드로어 토글
     var googleMap: GoogleMap? = null
     lateinit var apiClient: GoogleApiClient
@@ -48,7 +50,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("mobileApp", "onCreate")
         super.onCreate(savedInstanceState)
-        val binding = ActivityMapBinding.inflate(layoutInflater)
+        binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getData()
         // 11-6 액션바드로어 토글
@@ -102,11 +104,22 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         p0.getUiSettings().setCompassEnabled(true);
         p0.getUiSettings().setMapToolbarEnabled(true);
 
-        // 마커가 클릭되면 하단의 스크롤뷰에 상세정보를 띄운다
+        /* 마커 클릭 이벤트 */
+
         var index: Int = 0
         googleMap!!.setOnMarkerClickListener(object :GoogleMap.OnMarkerClickListener{
             override fun onMarkerClick(p0: Marker): Boolean {
+
+                if (p0.title=="현 위치") { // 현 위치를 나타내는 마커라면 장소 추가 버튼 활성화
+                    binding.fabAdd.visibility = View.VISIBLE
+                    binding.placeInfo.visibility = View.GONE
+                    binding.fabStar.visibility = View.GONE
+                    return false
+                }
+
+                // 마커가 클릭되면 하단의 스크롤뷰에 상세정보를 띄운다
                 findViewById<ScrollView>(R.id.place_info).visibility = View.VISIBLE
+                findViewById<ExtendedFloatingActionButton>(R.id.fab_star).visibility = View.VISIBLE
                 findViewById<TextView>(R.id.info_placename).setText(p0.title)
                 for (i in 0 until datas.size) {
                     if (datas[i].placename==p0.title){

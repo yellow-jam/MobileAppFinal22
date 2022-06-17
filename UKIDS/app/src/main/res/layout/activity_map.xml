@@ -58,6 +58,7 @@
     </RelativeLayout>
 
     <ScrollView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         app:behavior_peekHeight="200dp"
@@ -120,7 +121,6 @@
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fab_add"
@@ -132,7 +132,7 @@
         app:layout_anchorGravity="bottom|right" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fab_star"
