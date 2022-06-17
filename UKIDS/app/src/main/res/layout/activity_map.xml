@@ -8,18 +8,15 @@
     tools:context=".MapActivity">
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_collapseMode="pin"
-        >
+        app:layout_collapseMode="pin">
 
         <fragment
             android:id="@+id/mapView"
@@ -28,25 +25,31 @@
             android:layout_height="match_parent" />
 
         <com.google.android.material.chip.ChipGroup
-            android:layout_margin="10dp"
+            android:id="@+id/map_chipgroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/map_chipgroup"
-            app:layout_constraintTop_toTopOf="@id/mapView"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             app:layout_constraintLeft_toLeftOf="@id/mapView"
-            >
+            app:layout_constraintTop_toTopOf="@id/mapView">
+
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="놀이터/공원" />
+
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="도서관" />
+
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="키즈카페" />
+
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,7 +65,6 @@
         app:layout_behavior="@string/bottom_sheet_behavior"
         android:background="@color/white"
         android:id="@+id/place_info"
-        android:visibility="gone"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,36 +77,70 @@
                 android:layout_height="wrap_content"
                 android:textSize="24dp"
                 android:id="@+id/info_placename"
-                android:text="시설 이름" />
+                android:text="시설 명칭" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray"
+                    android:layout_marginRight="10dp"
+                    android:text="시설 유형   |" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/info_placetype"
+                    android:text="놀이터/공원/도서관/키즈카페" />
+            </LinearLayout>
+
             <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/lightgray"
                 />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:layout_marginTop="10dp"
                 android:text="주소" />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="40dp"
                 android:id="@+id/info_addr"
                 android:text="서울특별시 00구 00동 도로명이나 번지수" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="장소 유형" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:id="@+id/info_placetype"
-                android:text="장소 설명 있었으면..." />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:text="후기도 넣을수있을까?? 장고서버도 써야함" />
         </LinearLayout>
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab_add"
+        android:layout_margin="20dp"
+        app:icon="@android:drawable/ic_input_add"
+        app:layout_anchor="@id/mapView"
+        android:text="유키즈존 제보"
+        android:backgroundTint="@color/yellowgreen"
+        app:layout_anchorGravity="bottom|right" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab_star"
+        android:layout_margin="20dp"
+        app:icon="@android:drawable/star_on"
+        app:layout_anchor="@id/info_placename"
+        android:backgroundTint="@color/yellow"
+        app:layout_anchorGravity="right" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
