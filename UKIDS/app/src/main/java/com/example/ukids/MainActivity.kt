@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.example.ukids.databinding.ActivityMainBinding
+import com.google.android.gms.maps.GoogleMap
 import com.kakao.sdk.common.util.Utility
 
 class MainActivity : AppCompatActivity() {
@@ -20,10 +21,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+        /*
        // 카카오 로그인 해시 키 구하기
        val keyHash = Utility.getKeyHash(this)
        Log.d("mobileApp", keyHash)
-
+       */
 
         // 11-6 액션바드로어 토글
         toggle = ActionBarDrawerToggle(this, binding.drawer, R.string.drawer_open, R.string.drawer_close)
@@ -76,6 +78,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)) return true // 11-6 토글 - 햄버거 버튼이 눌렸다면 true
+        when(item.itemId){
+            R.id.menu_mypage -> {  // 11111
+                //startActivity(Intent(this@MainActivity, ))
+                overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
+                return true
+            }
+            R.id.menu_mystar -> {  // 22222
+                //startActivity()
+                overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
+                return true
+            }
+            R.id.menu_settings -> {  // 22222
+                //startActivity()
+                overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
+                return true
+            }
+            R.id.menu_contacts -> {  // 22222
+                //startActivity()
+                overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
+                return true
+            }
+
+        }
         return super.onOptionsItemSelected(item)
     }
 }

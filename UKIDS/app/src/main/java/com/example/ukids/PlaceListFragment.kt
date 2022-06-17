@@ -27,6 +27,8 @@ class PlaceListFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var myData = mutableListOf<myRow>()
+    private lateinit var binding: FragmentPlaceListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,86 @@ class PlaceListFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        // XML 데이터 가져오기
+        val call1: Call<responseInfo1> = MyApplication.networkServiceXml.getXmlList(
+            "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
+            "xml",
+            2,
+            30
+        )
+
+        call1?.enqueue(object : Callback<responseInfo1> {
+            override fun onResponse(call: Call<responseInfo1>, response: Response<responseInfo1>) {
+                if(response.isSuccessful){
+                    Log.d("mobileApp", "$response")
+                    val resdatas = response.body()!!.row
+                    for (i in 0 until resdatas.size) {
+                        myData.add(myRow(resdatas[i]))
+                    }
+                    binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
+                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), myData)
+                }
+            }
+
+            override fun onFailure(call: Call<responseInfo1>, t: Throwable) {
+                Log.d("mobileApp", "onFailure")
+            }
+        })
+
+        // XML 데이터 가져오기2
+        val call2: Call<responseInfo2> = MyApplication.networkServiceXml.getXmlList2(
+            "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
+            "xml",
+            2,
+            30
+        )
+
+        call2?.enqueue(object : Callback<responseInfo2> {
+            override fun onResponse(call: Call<responseInfo2>, response: Response<responseInfo2>) {
+                if(response.isSuccessful){
+                    Log.d("mobileApp", "$response")
+                    val resdatas = response.body()!!.row
+                    for (i in 0 until resdatas.size) {
+                        myData.add(myRow(resdatas[i]))
+                    }
+                    binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
+                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), myData)
+
+                }
+            }
+
+            override fun onFailure(call: Call<responseInfo2>, t: Throwable) {
+                Log.d("mobileApp", "onFailure")
+            }
+        })
+
+        // XML 데이터 가져오기3
+        val call3: Call<responseInfo3> = MyApplication.networkServiceXml.getXmlList3(
+            "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
+            "xml",
+            2,
+            30
+        )
+
+        call3?.enqueue(object : Callback<responseInfo3> {
+            override fun onResponse(call: Call<responseInfo3>, response: Response<responseInfo3>) {
+                if(response.isSuccessful){
+                    Log.d("mobileApp", "$response")
+                    val resdatas = response.body()!!.row
+                    for (i in 0 until resdatas.size) {
+                        myData.add(myRow(resdatas[i]))
+                    }
+                    binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
+                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), myData)
+
+                }
+            }
+
+            override fun onFailure(call: Call<responseInfo3>, t: Throwable) {
+                Log.d("mobileApp", "onFailure")
+            }
+        })
     }
 
     override fun onCreateView(
@@ -41,32 +123,10 @@ class PlaceListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentPlaceListBinding.inflate(inflater, container, false)
+
+        binding = FragmentPlaceListBinding.inflate(inflater, container, false)
 
         //val returnType = arguments?.getString("returnType")
-
-        // XML 데이터 가져오기
-        val call: Call<responseInfo> = MyApplication.networkServiceXml.getXmlList(
-            "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
-            "xml",
-            1,
-            30
-        )
-
-        call?.enqueue(object : Callback<responseInfo> {
-            override fun onResponse(call: Call<responseInfo>, response: Response<responseInfo>) {
-                if(response.isSuccessful){
-                    Log.d("mobileApp", "$response")
-                    binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
-                    binding.PlaceListRecyclerView.adapter = XmlAdapter(activity as Context, response.body()!!.row)
-                }
-            }
-
-            override fun onFailure(call: Call<responseInfo>, t: Throwable) {
-                Log.d("mobileApp", "onFailure")
-            }
-        })
-
 
         return binding.root
     }

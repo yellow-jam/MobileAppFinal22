@@ -60,6 +60,8 @@
         app:behavior_hideable="false"
         app:layout_behavior="@string/bottom_sheet_behavior"
         android:background="@color/white"
+        android:id="@+id/place_info"
+        android:visibility="gone"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,7 +72,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:textSize="24dp"
+                android:id="@+id/info_placename"
                 android:text="시설 이름" />
             <ImageView
                 android:layout_width="150dp"
@@ -84,6 +87,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:id="@+id/info_addr"
                 android:text="서울특별시 00구 00동 도로명이나 번지수" />
             <TextView
                 android:layout_width="match_parent"
@@ -92,6 +96,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:id="@+id/info_placetype"
                 android:text="장소 설명 있었으면..." />
             <TextView
                 android:layout_width="match_parent"

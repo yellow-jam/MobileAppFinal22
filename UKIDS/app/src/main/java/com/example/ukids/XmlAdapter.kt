@@ -20,8 +20,8 @@ class XmlAdapter (val context: Context, val datas: MutableList<myRow>?):
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as XmlViewHolder).binding
         val model = datas!![position]
-        binding.placename.text = model.FACLT_NM
-        binding.placetype.text = ""
+        binding.placename.text = model.placename
+        binding.placetype.text = model.placetype
         binding.placeaddr.text = model.REFINE_LOTNO_ADDR ?: model.REFINE_ROADNM_ADDR
     }
 }

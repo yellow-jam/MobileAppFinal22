@@ -20,5 +20,23 @@ interface NetworkService {
         @Query("Type") type:String,
         @Query("pIndex") page:Int,
         @Query("pSize") pageSize:Int
-    ) : Call<responseInfo>
+    ) : Call<responseInfo1>
+
+    @GET("ChildPlayFacility")
+    fun getXmlList2(
+        @Query("KEY") apiKey:String?,
+        @Query("Type") type:String,
+        @Query("pIndex") page:Int,
+        @Query("pSize") pageSize:Int
+    ) : Call<responseInfo2>
+
+
+    @GET("Kidscafe")
+    fun getXmlList3(
+        @Query("KEY") apiKey:String?,
+        @Query("Type") type:String,
+        @Query("pIndex") page:Int,
+        @Query("pSize") pageSize:Int
+    ) : Call<responseInfo3>
+
 }
