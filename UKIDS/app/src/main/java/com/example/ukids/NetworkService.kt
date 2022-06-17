@@ -39,4 +39,12 @@ interface NetworkService {
         @Query("pSize") pageSize:Int
     ) : Call<responseInfo3>
 
+    // 카카오 API https://developers.kakao.com/docs/latest/ko/local/dev-guide#coord-to-address
+    @GET("/v2/local/geo/coord2address.json")
+    fun getCoord2Address(
+        @Query("x") longitude: String,
+        @Query("y") latitude: String,
+        //@Query("input_coord") input_coord: String
+    ) : Call<C2R>
+
 }

@@ -97,6 +97,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onMapReady(p0: GoogleMap) {
+        var tempmarkerOptions: Marker? = null
         Log.d("mobileApp", "onMapReady")
         googleMap = p0
         addMarkers()
@@ -105,12 +106,18 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         p0.getUiSettings().setMapToolbarEnabled(true);
 
         /* 마커 클릭 이벤트 */
-
         var index: Int = 0
         googleMap!!.setOnMarkerClickListener(object :GoogleMap.OnMarkerClickListener{
             override fun onMarkerClick(p0: Marker): Boolean {
 
                 if (p0.title=="현 위치") { // 현 위치를 나타내는 마커라면 장소 추가 버튼 활성화
+                    binding.fabAdd.visibility = View.VISIBLE
+                    binding.placeInfo.visibility = View.GONE
+                    binding.fabStar.visibility = View.GONE
+                    return false
+                }
+
+                if (p0==tempmarkerOptions) {
                     binding.fabAdd.visibility = View.VISIBLE
                     binding.placeInfo.visibility = View.GONE
                     binding.fabStar.visibility = View.GONE
@@ -134,8 +141,52 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             }
         })
 
+
+        var markerOptions : MarkerOptions
+        /* 맵 클릭 이벤트 */
+        googleMap!!.setOnMapClickListener(object: GoogleMap.OnMapClickListener{
+            override fun onMapClick(latLng: LatLng) {
+                binding.fabAdd.visibility = View.VISIBLE
+                binding.placeInfo.visibility = View.GONE
+                binding.fabStar.visibility = View.GONE
+
+                // 클릭한 위치를 마커로 표시
+                tempmarkerOptions?.remove()
+                markerOptions = MarkerOptions()
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                markerOptions.position(latLng!!)
+
+                tempmarkerOptions = googleMap?.addMarker(markerOptions)
+                Log.d("mobileApp", "$latLng")
+            }
+        })
     }
 
+    private fun addPlace(latLng: LatLng) {
+
+        val intent = Intent(this@MapActivity, AddActivity::class.java)
+
+        val call: Call<C2R> = MyApplication.networkServiceC2R.getCoord2Address(
+            latLng.longitude.toString(),
+            latLng.latitude.toString()
+
+        )
+
+        call?.enqueue(object : Callback<C2R>{
+            override fun onResponse(call: Call<C2R>, response: Response<C2R>) {
+                if(response.isSuccessful){
+                    Log.d("mobileApp", "$response")
+
+                }
+            }
+
+            override fun onFailure(call: Call<C2R>, t: Throwable) {
+                Log.d("mobileApp", "onFailure")
+            }
+        })
+
+
+    }
 
     private fun moveMap(latitude:Double, longitude:Double){
         Log.d("mobileApp", "moveMap")
@@ -149,9 +200,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             .build()
         // 카메라 이동
         googleMap!!.moveCamera(CameraUpdateFactory.newCameraPosition(position))
-        // 마커 추가
+        // 현위치 마커 추가
         val markerOp = MarkerOptions()
-        markerOp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+        markerOp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
         markerOp.position(latLng)
         markerOp.title("현 위치")
         googleMap?.addMarker(markerOp)
@@ -254,7 +305,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 lat.toDouble(),
                 lng.toDouble()
             )
-            googleMap!!.addMarker(MarkerOptions().position(latLng).title(datas[i].placename))
+            val markerOp = MarkerOptions()
+            markerOp.icon(BitmapDescriptorFactory.defaultMarker(80.toFloat()))
+            markerOp.position(latLng)
+            markerOp.title(datas[i].placename)
+            googleMap?.addMarker(markerOp)
+            //googleMap!!.addMarker(MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(R.color.yellowgreen.toFloat())).position(latLng).title(datas[i].placename))
 
         }
     }
