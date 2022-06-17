@@ -12,7 +12,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.kakao.sdk.common.util.Utility
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var intent1: Intent
     lateinit var binding: ActivityMainBinding
     lateinit var toggle : ActionBarDrawerToggle // 11-6 액션바드로어 토글
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,22 +34,46 @@ class MainActivity : AppCompatActivity() {
         // 12-3 내비게이션 드로어에 이벤트 리스너 추가
         binding.mainDrawerView.setNavigationItemSelectedListener {
             Log.d("mobileApp", "Navigation selected... ${it.title}")
+            when(it.title){
+                "내 정보" -> {  // 11111
+                    //startActivity(Intent(this@MainActivity, ))
+                    overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
+
+                }
+                "즐겨찾기" -> {  // 22222
+                    //startActivity()
+                    overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
+
+                }
+                "앱 설정" -> {
+                    val intent1 = Intent(this@MainActivity, SettingActivity::class.java)
+                    startActivity(intent1)
+                    overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
+                    Log.d("mobileApp", "세팅")
+
+                }
+                "문의하기" -> {
+                    //startActivity()
+                    overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
+
+                }
+            }
             true
         }
 
         binding.btnMap.setOnClickListener {
-            intent1 = Intent(this, MapActivity::class.java)
-            startActivity(intent1)
+            val intent = Intent(this, MapActivity::class.java)
+            startActivity(intent)
             overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
         }
 
         binding.btnAuth.setOnClickListener {
-            intent1 = Intent(this, AuthActivity::class.java)
+            val intent = Intent(this, AuthActivity::class.java)
             if(binding.btnAuth.text.equals("로그인")) // 로그아웃 상태
-                intent1.putExtra("data", "logout")
+                intent.putExtra("data", "logout")
             else if(binding.btnAuth.text.equals("로그아웃")) // 로그인 상태
-                intent1.putExtra("data", "login")
-            startActivity(intent1)
+                intent.putExtra("data", "login")
+            startActivity(intent)
             overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
         }
 
@@ -78,29 +101,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)) return true // 11-6 토글 - 햄버거 버튼이 눌렸다면 true
-        when(item.itemId){
-            R.id.menu_mypage -> {  // 11111
-                //startActivity(Intent(this@MainActivity, ))
-                overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
-                return true
-            }
-            R.id.menu_mystar -> {  // 22222
-                //startActivity()
-                overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
-                return true
-            }
-            R.id.menu_settings -> {  // 22222
-                //startActivity()
-                overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
-                return true
-            }
-            R.id.menu_contacts -> {  // 22222
-                //startActivity()
-                overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
-                return true
-            }
 
-        }
         return super.onOptionsItemSelected(item)
     }
 }
