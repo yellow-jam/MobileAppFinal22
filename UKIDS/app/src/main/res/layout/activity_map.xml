@@ -39,21 +39,28 @@
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:id="@+id/map_playground"
+                app:chipBackgroundColor="@color/yellow"
                 android:text="놀이터/공원" />
-
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:id="@+id/map_lib"
+                app:chipBackgroundColor="@color/yellowgreen"
                 android:text="도서관" />
-
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:id="@+id/map_kidscafe"
                 android:text="키즈카페" />
-
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:id="@+id/map_ukidszone"
                 android:text="유키즈존" />
         </com.google.android.material.chip.ChipGroup>
     </RelativeLayout>
@@ -101,7 +108,7 @@
                 android:layout_width="200dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/lightgray"
+                android:background="@color/morelightgray"
                 />
             <TextView
                 android:layout_width="match_parent"
