@@ -113,11 +113,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:id="@+id/info_addr"
-                android:text="서울특별시 00구 00동 도로명이나 번지수" />
+                android:text="00시 00구 00동 도로명주소 또는 번지주소" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:layout_marginTop="10dp"
+                android:text="이용 후기" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:text="후기도 넣을수있을까?? 장고서버도 써야함" />
+                android:text="이용 후기(작성 내용)" />
         </LinearLayout>
     </ScrollView>
 

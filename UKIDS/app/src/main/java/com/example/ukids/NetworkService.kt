@@ -2,6 +2,7 @@ package com.example.ukids
 
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface NetworkService {
@@ -42,9 +43,10 @@ interface NetworkService {
     // 카카오 API https://developers.kakao.com/docs/latest/ko/local/dev-guide#coord-to-address
     @GET("/v2/local/geo/coord2address.json")
     fun getCoord2Address(
+        @Header("Authorization") REST_API_KEY: String,
         @Query("x") longitude: String,
         @Query("y") latitude: String,
-        //@Query("input_coord") input_coord: String
+        //@Query("input_coord") input_coord: String,
     ) : Call<C2R>
 
 }

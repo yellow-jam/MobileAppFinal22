@@ -3,10 +3,13 @@ package com.example.ukids
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.ukids.databinding.ActivityAuthBinding
+
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 
@@ -53,6 +56,34 @@ class AuthActivity : AppCompatActivity() {
                     }
                 }
         }
+
+        /* 로그인 버튼, 회원가입 버튼 활성화 및 비활성화 */
+        val textWatcher : TextWatcher = object : TextWatcher{
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //TODO("Not yet implemented")
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                if (binding.authEmailEditView.text != null && binding.authPasswordEditView.text.length > 5) {
+                    binding.signBtn.setClickable(true);
+                    binding.signBtn.setBackgroundColor(resources.getColor(R.color.yellow));
+                    binding.loginBtn.setClickable(true);
+                    binding.loginBtn.setBackgroundColor(resources.getColor(R.color.yellow));
+                } else {
+                    binding.signBtn.setClickable(false);
+                    binding.signBtn.setBackgroundColor(resources.getColor(R.color.lightgray));
+                    binding.loginBtn.setClickable(false);
+                    binding.loginBtn.setBackgroundColor(resources.getColor(R.color.lightgray));
+                }
+            }
+        }
+        binding.authEmailEditView.addTextChangedListener(textWatcher)
+        binding.authPasswordEditView.addTextChangedListener(textWatcher)
+
 
         /* 로그인 기능 */
         binding.loginBtn.setOnClickListener {

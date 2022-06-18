@@ -8,37 +8,33 @@ import com.tickaroo.tikxml.annotation.Xml
 class myRow() {
     lateinit var placename: String
     lateinit var placetype: String
-    var REFINE_LOTNO_ADDR: String? = null
-    var REFINE_ROADNM_ADDR: String? = null
+    var REFINE_LOTNO_ADDR: String? = null  // 번지주소
+    var REFINE_ROADNM_ADDR: String? = null  // 도로명주소
     var REFINE_WGS84_LOGT: String? = null  // 경도
     var REFINE_WGS84_LAT: String? = null  // 위도
 
-    constructor(myRow: myRow1) : this() {
-        this.placename=myRow.FACLT_NM
-        this.placetype="놀이터"
-        this.REFINE_LOTNO_ADDR=myRow.REFINE_LOTNO_ADDR
-        this.REFINE_ROADNM_ADDR=myRow.REFINE_ROADNM_ADDR
-        this.REFINE_WGS84_LOGT=myRow.REFINE_WGS84_LOGT
-        this.REFINE_WGS84_LAT=myRow.REFINE_WGS84_LAT
+    constructor(placename: String, placetype: String,
+      addr: String?, road_addr: String?,
+      lng: String?, lat: String?): this() {
+        this.placename = placename
+        this.placetype = placetype
+        this.REFINE_LOTNO_ADDR = addr
+        this.REFINE_ROADNM_ADDR = road_addr
+        this.REFINE_WGS84_LOGT = lng
+        this.REFINE_WGS84_LAT = lat
     }
 
-    constructor(myRow: myRow2) : this() {
-        this.placename=myRow.PLAY_FACLT_NM
-        this.placetype="놀이터"
-        this.REFINE_LOTNO_ADDR=myRow.REFINE_LOTNO_ADDR
-        this.REFINE_ROADNM_ADDR=myRow.REFINE_ROADNM_ADDR
-        this.REFINE_WGS84_LOGT=myRow.REFINE_WGS84_LOGT
-        this.REFINE_WGS84_LAT=myRow.REFINE_WGS84_LAT
-    }
+    constructor(myRow: myRow1) : this(myRow.FACLT_NM, "놀이터",
+        myRow.REFINE_LOTNO_ADDR, myRow.REFINE_ROADNM_ADDR,
+        myRow.REFINE_WGS84_LOGT, myRow.REFINE_WGS84_LAT)
 
-    constructor(myRow: myRow3) : this() {
-        this.placename=myRow.BIZPLC_NM
-        this.placetype="키즈카페"
-        this.REFINE_LOTNO_ADDR=myRow.REFINE_LOTNO_ADDR
-        this.REFINE_ROADNM_ADDR=myRow.REFINE_ROADNM_ADDR
-        this.REFINE_WGS84_LOGT=myRow.REFINE_WGS84_LOGT
-        this.REFINE_WGS84_LAT=myRow.REFINE_WGS84_LAT
-    }
+    constructor(myRow: myRow2) : this(myRow.PLAY_FACLT_NM, "놀이터",
+        myRow.REFINE_LOTNO_ADDR, myRow.REFINE_ROADNM_ADDR,
+        myRow.REFINE_WGS84_LOGT, myRow.REFINE_WGS84_LAT)
+
+    constructor(myRow: myRow3) : this(myRow.BIZPLC_NM, "키즈카페",
+        myRow.REFINE_LOTNO_ADDR, myRow.REFINE_ROADNM_ADDR,
+        myRow.REFINE_WGS84_LOGT, myRow.REFINE_WGS84_LAT)
 }
 
 

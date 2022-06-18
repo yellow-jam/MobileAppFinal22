@@ -1,7 +1,6 @@
 package com.example.ukids
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -11,15 +10,14 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukids.databinding.ActivityMapBinding
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -46,6 +44,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     lateinit var lats: ArrayList<String?>
     lateinit var lngs: ArrayList<String?>
     lateinit var names: ArrayList<String?>
+
+    var tempmarkerOptions: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("mobileApp", "onCreate")
@@ -94,10 +94,17 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             apiClient.connect()
         }
 
+        // fab
+        binding.fabAdd.setOnClickListener {
+            if (tempmarkerOptions != null) {
+                Log.d("mobileApp", "${tempmarkerOptions!!.position}")
+                addPlace(tempmarkerOptions!!.position)
+            }
+
+        }
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        var tempmarkerOptions: Marker? = null
         Log.d("mobileApp", "onMapReady")
         googleMap = p0
         addMarkers()
@@ -111,6 +118,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             override fun onMarkerClick(p0: Marker): Boolean {
 
                 if (p0.title=="현 위치") { // 현 위치를 나타내는 마커라면 장소 추가 버튼 활성화
+                    tempmarkerOptions?.remove()
                     binding.fabAdd.visibility = View.VISIBLE
                     binding.placeInfo.visibility = View.GONE
                     binding.fabStar.visibility = View.GONE
@@ -125,9 +133,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 }
 
                 // 마커가 클릭되면 하단의 스크롤뷰에 상세정보를 띄운다
+                findViewById<ExtendedFloatingActionButton>(R.id.fab_add).visibility = View.GONE
                 findViewById<ScrollView>(R.id.place_info).visibility = View.VISIBLE
                 findViewById<ExtendedFloatingActionButton>(R.id.fab_star).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.info_placename).setText(p0.title)
+                findViewById<TextView>(R.id.info_placename).setText(p0.title)  // 마커의 타이틀과 같은 장소명을 가진 데이터를 찾아온다
                 for (i in 0 until datas.size) {
                     if (datas[i].placename==p0.title){
                         index = i
@@ -162,13 +171,39 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         })
     }
 
+    val requestLauncher: ActivityResultLauncher<Intent>
+            = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        Log.d("mobileApp", "사후처리 메소드")
+        Log.d("mobileApp", "${it.data!!.getStringExtra("placename")}")
+        Log.d("mobileApp", "${it.data!!.getStringExtra("placetype")}")
+        Log.d("mobileApp", "${it.data!!.getStringExtra("addr")}")
+        Log.d("mobileApp", "${it.data!!.getStringExtra("content")}")
+
+        val placename = it.data!!.getStringExtra("placename")!!
+        val placetype = it.data!!.getStringExtra("placetype")!!
+        val addr = it.data!!.getStringExtra("addr")
+        val lat = it.data!!.getStringExtra("lat")
+        val lng = it.data!!.getStringExtra("lng")
+        // 데이터 추가
+        datas.add(myRow(placename, placetype, "", addr, lat, lng))
+
+        // 마커 추가
+        val m = MarkerOptions().title(placename)
+        m.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+        m.position(LatLng(lat!!.toDouble(), lng!!.toDouble()))
+        tempmarkerOptions = googleMap?.addMarker(m)
+    }
+
+
     private fun addPlace(latLng: LatLng) {
+        var addr: String = ""
 
-        val intent = Intent(this@MapActivity, AddActivity::class.java)
-
+        // 좌표 -> 주소 변환 api
+        /*
         val call: Call<C2R> = MyApplication.networkServiceC2R.getCoord2Address(
+            "KakaoAK 7b133b534b22adc5d90927bc83653849",
             latLng.longitude.toString(),
-            latLng.latitude.toString()
+            latLng.latitude.toString(),
 
         )
 
@@ -176,17 +211,24 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             override fun onResponse(call: Call<C2R>, response: Response<C2R>) {
                 if(response.isSuccessful){
                     Log.d("mobileApp", "$response")
-
+                    addr = response.body()!!.road_address.address_name  // 도로명주소 이용
                 }
             }
-
             override fun onFailure(call: Call<C2R>, t: Throwable) {
                 Log.d("mobileApp", "onFailure")
             }
         })
+        Log.d("mobileApp", "api 요청 이후...")
+        */
 
+        val intent = Intent(this@MapActivity, AddActivity::class.java)
+        //intent.putExtra("addr", addr)
+        intent.putExtra("lat", latLng.latitude.toString())
+        intent.putExtra("lng", latLng.longitude.toString())
+        requestLauncher.launch(intent)
 
     }
+
 
     private fun moveMap(latitude:Double, longitude:Double){
         Log.d("mobileApp", "moveMap")

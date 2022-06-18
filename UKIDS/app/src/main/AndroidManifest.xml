@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UKIDS"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".AddActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />

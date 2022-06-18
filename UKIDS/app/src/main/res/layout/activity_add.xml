@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddActivity"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:id="@+id/add_placename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="시설 명칭"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:text="| 시설 유형" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.ChipGroup
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:id="@+id/add_chipgroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.chip.Chip
+                    android:checked="true"
+                    app:iconEndPadding="1dp"
+                    app:textStartPadding="4dp"
+                    app:chipEndPadding="1dp"
+                    android:id="@+id/add_park"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="놀이터/공원" />
+
+                <com.google.android.material.chip.Chip
+                    app:iconEndPadding="1dp"
+                    app:textStartPadding="4dp"
+                    app:chipEndPadding="1dp"
+                    android:id="@+id/add_lib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="도서관" />
+
+                <com.google.android.material.chip.Chip
+                    app:iconEndPadding="1dp"
+                    app:textStartPadding="4dp"
+                    app:chipEndPadding="1dp"
+                    android:id="@+id/add_kidscafe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="키즈카페" />
+
+                <com.google.android.material.chip.Chip
+                    app:iconEndPadding="1dp"
+                    app:textStartPadding="4dp"
+                    app:chipEndPadding="1dp"
+                    android:id="@+id/add_ukids"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="유키즈존" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/add_image"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/lightgray"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:layout_marginTop="10dp"
+            android:text="| 주소" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/add_addr"
+            android:text="위도, 경도 -> 주소 변환 API로 자동 표시" />
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="| 이용 후기" />
+
+        <EditText
+            android:id="@+id/add_content"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="8"
+            android:gravity="top|left"
+            android:inputType="textMultiLine"
+            android:scrollHorizontally="false"
+            android:background="@drawable/edit_text_background"
+            />
+    </LinearLayout>
+
+</LinearLayout>
