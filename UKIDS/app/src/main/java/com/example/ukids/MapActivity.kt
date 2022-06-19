@@ -1,9 +1,17 @@
 package com.example.ukids
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.location.Location
+import android.media.AudioAttributes
+import android.media.RingtoneManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +25,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.NotificationCompat
+import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukids.databinding.ActivityMapBinding
@@ -147,6 +157,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             val content = it.data!!.getStringExtra("content")
             // 데이터 추가
             datas.add(myRow(placename, placetype, "", addr, lat, lng, "", ""))
+            // 알림 발생: 추가 성공
+            notificationRing(placename)
 
             val hue = when(placetype) {
                 "놀이터" -> 50.toFloat()
@@ -169,6 +181,53 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             findViewById<TextView>(R.id.info_addr).setText(addr)
             findViewById<TextView>(R.id.info_content).setText(content)
         }
+
+    }
+
+    fun notificationRing(placename: String) {
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val builder : NotificationCompat.Builder // 버전에 따라 초기화 필요
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {  // 버전 26 이상
+            val ch_id = "add-channel"
+            val channel = NotificationChannel(ch_id, "addPlace", NotificationManager.IMPORTANCE_DEFAULT)  // (id, 이름, 중요도)
+
+            // 알림 상세 설정
+            channel.description = "addPlace - 장소 추가" // 알림 설명 문자열
+            channel.setShowBadge(true) // 앱 아이콘에 알림 뱃지 출력 여부
+            channel.enableLights(true) // led 불빛 알림
+            channel.lightColor = Color.RED  // led 색상
+            channel.enableVibration(true) // 진동 알림
+            channel.vibrationPattern = longArrayOf(100,200,100,200) // 진동 알림 패턴
+            // (100, 200), (100, 200) : (진동 x 시간, 진동 시간) 단위 msec(밀리초)
+
+            // 소리 알림
+            val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val audio_attr = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .build()
+            channel.setSound(uri, audio_attr) // (uri, 오디오 속성)
+
+            // 채널을 매니저에 등록
+            manager.createNotificationChannel(channel)
+            builder = NotificationCompat.Builder(this, ch_id)
+        } else {  // 버전 25 이하
+            builder = NotificationCompat.Builder(this)
+        }
+
+        // 알림 객체 설정
+        builder.setSmallIcon(R.drawable.logo_fore_small)
+        builder.setWhen(System.currentTimeMillis()) // 시각 출력(현재 시각)
+        builder.setContentTitle("유키즈존 제보 완료!") // 알림 본문
+        builder.setContentText("${placename}의 위치를 제보했어요.")
+
+        // 알림 터치 이벤트 - 브로드캐스트 설정 필요
+        val replyIntent = Intent(this, MyReceiver::class.java)
+        val replyPendingIntent = PendingIntent.getBroadcast(this, 30, replyIntent, PendingIntent.FLAG_MUTABLE)
+        builder.setContentIntent(replyPendingIntent)
+
+        /* 알림 발생 */
+        manager.notify(11, builder.build())
     }
 
     override fun onMapReady(p0: GoogleMap) {
@@ -247,6 +306,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
         // 위도경도 좌표를 주소로 변환하는 카카오 api 요청
 
+        /*
         val call: Call<C2R> = MyApplication.networkServiceC2R.getCoord2Address(
             "KakaoAK 7b133b534b22adc5d90927bc83653849",
             latLng.longitude.toString(),
@@ -267,6 +327,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         })
         Log.d("mobileApp", "api 요청 이후...")
 
+         */
 
         val intent = Intent(this@MapActivity, AddActivity::class.java)
         //intent.putExtra("addr", addr)

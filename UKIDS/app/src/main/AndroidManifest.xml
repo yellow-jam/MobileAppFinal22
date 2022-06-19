@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UKIDS"
         android:usesCleartextTraffic="true">
+        <receiver
+            android:name=".MyReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
         <activity
             android:name=".MypageActivity"
             android:exported="false" />

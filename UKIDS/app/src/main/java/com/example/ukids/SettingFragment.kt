@@ -24,6 +24,7 @@ private const val ARG_PARAM2 = "param2"
 class SettingFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
+        
 
         val idPreference: EditTextPreference? = findPreference("id")
         idPreference?.title = "ID 변경"
