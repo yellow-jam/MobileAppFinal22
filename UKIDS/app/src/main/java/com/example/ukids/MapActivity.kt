@@ -41,9 +41,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     lateinit var providerClient: FusedLocationProviderClient
 
     lateinit var datas: MutableList<myRow>
-    lateinit var lats: ArrayList<String?>
-    lateinit var lngs: ArrayList<String?>
-    lateinit var names: ArrayList<String?>
+    var playgrounds = arrayListOf<myRow>()
+    var kidscafes = arrayListOf<myRow>()
+    var libs = arrayListOf<myRow>()
 
     var tempmarkerOptions: Marker? = null
 
@@ -59,9 +59,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         toggle.syncState()
 
         datas = mutableListOf<myRow>()
-        lats = ArrayList<String?>()
-        lngs = ArrayList<String?>()
-        names = ArrayList<String?>()
         /* 지도 */
         (supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment)!!.getMapAsync(this)
 
@@ -107,7 +104,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     override fun onMapReady(p0: GoogleMap) {
         Log.d("mobileApp", "onMapReady")
         googleMap = p0
-        addMarkers()
         p0.getUiSettings().setZoomControlsEnabled(true);
         p0.getUiSettings().setCompassEnabled(true);
         p0.getUiSettings().setMapToolbarEnabled(true);
@@ -144,7 +140,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                     }
                 }
                 findViewById<TextView>(R.id.info_placetype).setText(datas[index].placetype)
-                findViewById<TextView>(R.id.info_addr).setText(datas[index].REFINE_LOTNO_ADDR ?: datas[index].REFINE_ROADNM_ADDR)
+                findViewById<TextView>(R.id.info_addr).setText(datas[index].addr ?: datas[index].road_addr)
 
                 return false
             }
@@ -162,7 +158,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 // 클릭한 위치를 마커로 표시
                 tempmarkerOptions?.remove()
                 markerOptions = MarkerOptions()
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(20F))
                 markerOptions.position(latLng!!)
 
                 tempmarkerOptions = googleMap?.addMarker(markerOptions)
@@ -185,7 +181,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         val lat = it.data!!.getStringExtra("lat")
         val lng = it.data!!.getStringExtra("lng")
         // 데이터 추가
-        datas.add(myRow(placename, placetype, "", addr, lat, lng))
+        datas.add(myRow(placename, placetype, "", addr, lat, lng, "", ""))
 
         // 마커 추가
         val m = MarkerOptions().title(placename)
@@ -232,7 +228,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private fun moveMap(latitude:Double, longitude:Double){
         Log.d("mobileApp", "moveMap")
-        addMarkers()
         // googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE  // 위성 지도 모드
         // 지도가 표시되면 보여지는 지역 설정 (위도, 경도)
         val latLng = LatLng(latitude, longitude)
@@ -244,7 +239,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         googleMap!!.moveCamera(CameraUpdateFactory.newCameraPosition(position))
         // 현위치 마커 추가
         val markerOp = MarkerOptions()
-        markerOp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+        markerOp.icon(BitmapDescriptorFactory.defaultMarker(20.toFloat()))
         markerOp.position(latLng)
         markerOp.title("현 위치")
         googleMap?.addMarker(markerOp)
@@ -267,9 +262,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                     Log.d("mobileApp", "$response")
                     val resdatas = response.body()!!.row
                     for (i in 0 until resdatas.size) {
-                        datas.add(myRow(resdatas[i]))
-                        Log.d("mobileApp", "${resdatas[i].FACLT_NM}")
+                        playgrounds.add(myRow(resdatas[i]))
                     }
+                    datas.addAll(playgrounds)
+                    addMarkers(playgrounds, 50.toFloat())
                 }
             }
 
@@ -282,7 +278,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         val call2: Call<responseInfo2> = MyApplication.networkServiceXml.getXmlList2(
             "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
             "xml",
-            2,
+            1,
             30
         )
 
@@ -292,9 +288,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                     Log.d("mobileApp", "$response")
                     val resdatas = response.body()!!.row
                     for (i in 0 until resdatas.size) {
-                        datas.add(myRow(resdatas[i]))
-                        Log.d("mobileApp", "${resdatas[i].PLAY_FACLT_NM}")
+                        playgrounds.add(myRow(resdatas[i]))
                     }
+                    datas.addAll(playgrounds)
+                    addMarkers(playgrounds, 50.toFloat())
                 }
             }
 
@@ -307,7 +304,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         val call3: Call<responseInfo3> = MyApplication.networkServiceXml.getXmlList3(
             "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
             "xml",
-            2,
+            1,
             30
         )
 
@@ -317,9 +314,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                     Log.d("mobileApp", "$response")
                     val resdatas = response.body()!!.row
                     for (i in 0 until resdatas.size) {
-                        datas.add(myRow(resdatas[i]))
-                        Log.d("mobileApp", "${resdatas[i].BIZPLC_NM}")
+                        kidscafes.add(myRow(resdatas[i]))
                     }
+                    datas.addAll(kidscafes)
+                    addMarkers(kidscafes, 30.toFloat())
                 }
             }
 
@@ -327,33 +325,55 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 Log.d("mobileApp", "onFailure")
             }
         })
+
+        // 서울열린데이터 XML 가져오기4
+        val call4: Call<responseInfo4> = MyApplication.networkServiceSeoul.getSeoul4(
+            "6258476a566c65723633517570426e",
+        )
+
+        call4?.enqueue(object : Callback<responseInfo4> {
+            override fun onResponse(call: Call<responseInfo4>, response: Response<responseInfo4>) {
+                if(response.isSuccessful){
+                    Log.d("mobileApp", "$response")
+                    val resdatas = response.body()!!.row
+                    for (i in 0 until resdatas.size) {
+                        libs.add(myRow(resdatas[i]))
+                    }
+                    datas.addAll(libs)
+                    addMarkers(libs, 80.toFloat())
+                }
+            }
+
+            override fun onFailure(call: Call<responseInfo4>, t: Throwable) {
+                Log.d("mobileApp", "onFailure")
+            }
+        })
     }
 
-    fun addMarkers() {
-        Log.d("mobileApp", "데이터 사이즈 ${datas.size}")
+    fun addMarkers(markers: MutableList<myRow>, hue: Float) {
+        Log.d("mobileApp", "addMarkers")
         var latLng: LatLng?
 
         var lat: String = "0"
         var lng: String = "0"
 
-        for (i in 0 until datas.size) {
-            lat = if ((datas[i].REFINE_WGS84_LAT!!) != "") {
-                datas[i].REFINE_WGS84_LAT!!
+        for (i in 0 until markers.size) {
+            lat = if ((markers[i].LAT!!) != "") {
+                markers[i].LAT!!
             } else "0"
-            lng = if ((datas[i].REFINE_WGS84_LOGT!!) != "") {
-                datas[i].REFINE_WGS84_LOGT!!
+            lng = if ((markers[i].LOTG!!) != "") {
+                markers[i].LOTG!!
             } else "0"
             latLng = LatLng(
                 lat.toDouble(),
                 lng.toDouble()
             )
             val markerOp = MarkerOptions()
-            markerOp.icon(BitmapDescriptorFactory.defaultMarker(80.toFloat()))
+            markerOp.icon(BitmapDescriptorFactory.defaultMarker(hue))
             markerOp.position(latLng)
-            markerOp.title(datas[i].placename)
+            markerOp.title(markers[i].placename)
             googleMap?.addMarker(markerOp)
-            //googleMap!!.addMarker(MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(R.color.yellowgreen.toFloat())).position(latLng).title(datas[i].placename))
-
+            //googleMap!!.addMarker(MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker().position(latLng).title(datas[i].placename))
         }
     }
 

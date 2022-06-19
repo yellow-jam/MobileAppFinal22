@@ -12,7 +12,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#FF18935F</color>
     <color name="yellowgreen">#FFAEE935</color>
-    <color name="yellow">#FFFFCC+00</color>
+    <color name="yellow">#FFFFCC00</color>
     <color name="orange">#FFFFA100</color>
     <color name="red">#FFFF4E00</color>
 

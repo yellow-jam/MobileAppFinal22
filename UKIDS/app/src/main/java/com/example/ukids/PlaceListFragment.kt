@@ -29,9 +29,10 @@ class PlaceListFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var myData = mutableListOf<myRow>()
-    var playground = arrayListOf<myRow>()
-    var kidscafe = arrayListOf<myRow>()
+    private var datas = mutableListOf<myRow>()
+    var playgrounds = arrayListOf<myRow>()
+    var kidscafes = arrayListOf<myRow>()
+    var libs = arrayListOf<myRow>()
     private lateinit var binding: FragmentPlaceListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,26 +43,14 @@ class PlaceListFragment : Fragment() {
         }
 
         getData()
-
-        for (i in 0 until myData.size) {
-            if (myData[i].placetype=="놀이터"){
-                playground.add(myData[i])
-            }
-        }
-
-        for (i in 0 until myData.size) {
-            if (myData[i].placetype=="키즈카페"){
-                kidscafe.add(myData[i])
-            }
-        }
     }
 
     fun getData() {
-        // XML 데이터 가져오기
+        // 경기데이터 XML 가져오기
         val call1: Call<responseInfo1> = MyApplication.networkServiceXml.getXmlList(
-            "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
+            "5fd88579ab304278b32224ffb999ae2e",
             "xml",
-            2,
+            1,
             30
         )
 
@@ -71,10 +60,11 @@ class PlaceListFragment : Fragment() {
                     Log.d("mobileApp", "$response")
                     val resdatas = response.body()!!.row
                     for (i in 0 until resdatas.size) {
-                        myData.add(myRow(resdatas[i]))
+                        playgrounds.add(myRow(resdatas[i]))
                     }
+                    datas.addAll(playgrounds)
                     binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
-                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), myData)
+                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), datas)
                 }
             }
 
@@ -83,11 +73,11 @@ class PlaceListFragment : Fragment() {
             }
         })
 
-        // XML 데이터 가져오기2
+        // 경기데이터 XML 가져오기2
         val call2: Call<responseInfo2> = MyApplication.networkServiceXml.getXmlList2(
-            "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
+            "5fd88579ab304278b32224ffb999ae2e",
             "xml",
-            2,
+            1,
             30
         )
 
@@ -97,10 +87,11 @@ class PlaceListFragment : Fragment() {
                     Log.d("mobileApp", "$response")
                     val resdatas = response.body()!!.row
                     for (i in 0 until resdatas.size) {
-                        myData.add(myRow(resdatas[i]))
+                        playgrounds.add(myRow(resdatas[i]))
                     }
+                    datas.addAll(playgrounds)
                     binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
-                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), myData)
+                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), datas)
 
                 }
             }
@@ -110,11 +101,11 @@ class PlaceListFragment : Fragment() {
             }
         })
 
-        // XML 데이터 가져오기3
+        // 경기데이터 XML 가져오기3
         val call3: Call<responseInfo3> = MyApplication.networkServiceXml.getXmlList3(
-            "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
+            "5fd88579ab304278b32224ffb999ae2e",
             "xml",
-            2,
+            1,
             30
         )
 
@@ -124,15 +115,41 @@ class PlaceListFragment : Fragment() {
                     Log.d("mobileApp", "$response")
                     val resdatas = response.body()!!.row
                     for (i in 0 until resdatas.size) {
-                        myData.add(myRow(resdatas[i]))
+                        kidscafes.add(myRow(resdatas[i]))
                     }
+                    datas.addAll(kidscafes)
                     binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
-                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), myData)
+                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), datas)
 
                 }
             }
 
             override fun onFailure(call: Call<responseInfo3>, t: Throwable) {
+                Log.d("mobileApp", "onFailure")
+            }
+        })
+
+        // 서울열린데이터 XML 가져오기4
+        val call4: Call<responseInfo4> = MyApplication.networkServiceSeoul.getSeoul4(
+            "6258476a566c65723633517570426e",
+        )
+
+        call4?.enqueue(object : Callback<responseInfo4> {
+            override fun onResponse(call: Call<responseInfo4>, response: Response<responseInfo4>) {
+                if(response.isSuccessful){
+                    Log.d("mobileApp", "$response")
+                    val resdatas = response.body()!!.row
+                    for (i in 0 until resdatas.size) {
+                        libs.add(myRow(resdatas[i]))
+                    }
+                    datas.addAll(libs)
+                    binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
+                    binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), datas)
+
+                }
+            }
+
+            override fun onFailure(call: Call<responseInfo4>, t: Throwable) {
                 Log.d("mobileApp", "onFailure")
             }
         })
@@ -149,18 +166,22 @@ class PlaceListFragment : Fragment() {
         //val returnType = arguments?.getString("returnType")
 
 
-        // 필터링 안됨
+        // 필터링 기능
         binding.placelistChipgroup.setOnCheckedStateChangeListener(
             object : ChipGroup.OnCheckedStateChangeListener {
                 override fun onCheckedChanged(group: ChipGroup, checkedIds: MutableList<Int>) {
                     var resarr = arrayListOf<myRow>()
                     if (binding.placelistPlayground.isChecked) {
                         Log.d("mobileApp", "놀이터 선택")
-                        resarr.addAll(playground)
+                        resarr.addAll(playgrounds)
                     }
                     if (binding.placelistKidscafe.isChecked) {
                         Log.d("mobileApp", "키즈카페 선택")
-                        resarr.addAll(kidscafe)
+                        resarr.addAll(kidscafes)
+                    }
+                    if (binding.placelistLib.isChecked) {
+                        Log.d("mobileApp", "키즈카페 선택")
+                        resarr.addAll(libs)
                     }
                     binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
                     binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), resarr)

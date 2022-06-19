@@ -3,6 +3,7 @@ package com.example.ukids
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface NetworkService {
@@ -39,6 +40,11 @@ interface NetworkService {
         @Query("pIndex") page:Int,
         @Query("pSize") pageSize:Int
     ) : Call<responseInfo3>
+
+    @GET("{KEY}/xml/SeoulPublicLibraryInfo/1/30/")
+    fun getSeoul4(
+        @Path("KEY") KEY:String?,
+    ) : Call<responseInfo4>
 
     // 카카오 API https://developers.kakao.com/docs/latest/ko/local/dev-guide#coord-to-address
     @GET("/v2/local/geo/coord2address.json")

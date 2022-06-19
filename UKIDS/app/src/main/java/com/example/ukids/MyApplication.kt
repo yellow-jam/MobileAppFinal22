@@ -29,6 +29,7 @@ class MyApplication: MultiDexApplication() {
         /* 공공데이터 요청 */
         //var networkServiceJSON : NetworkService
         var networkServiceXml : NetworkService
+        var networkServiceSeoul : NetworkService
         var networkServiceC2R : NetworkService
 
         /*
@@ -46,6 +47,12 @@ class MyApplication: MultiDexApplication() {
                 .addConverterFactory(TikXmlConverterFactory.create(parser))
                 .build()
 
+        val retrofitSeoul : Retrofit
+            get() = Retrofit.Builder()
+                .baseUrl("http://openapi.seoul.go.kr:8088/")
+                .addConverterFactory(TikXmlConverterFactory.create(parser))
+                .build()
+
         /* 좌표 -> 주소 api */
         val retrofitCoord2Addr : Retrofit
             get() = Retrofit.Builder()
@@ -53,15 +60,12 @@ class MyApplication: MultiDexApplication() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-
         init{
             //networkServiceJSON = retrofitJSON.create(NetworkService::class.java)
             networkServiceXml = retrofitXml.create(NetworkService::class.java)
+            networkServiceSeoul = retrofitSeoul.create(NetworkService::class.java)
             networkServiceC2R = retrofitCoord2Addr.create(NetworkService::class.java)
         }
-
-
-
 
     }
 

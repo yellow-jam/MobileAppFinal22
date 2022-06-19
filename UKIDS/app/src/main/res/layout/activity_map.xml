@@ -69,7 +69,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        app:behavior_peekHeight="200dp"
+        app:behavior_peekHeight="240dp"
         app:behavior_hideable="false"
         app:layout_behavior="@string/bottom_sheet_behavior"
         android:background="@color/white"
@@ -90,13 +90,13 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray"
-                    android:layout_marginRight="10dp"
-                    android:text="시설 유형   |" />
+                    android:text="시설 유형   |   " />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -104,32 +104,45 @@
                     android:text="놀이터/공원/도서관/키즈카페" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray"
+                    android:text="주소   |   " />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/info_addr"
+                    android:text="00시 00구 00동 도로명주소 또는 번지주소" />
+            </LinearLayout>
+
             <ImageView
                 android:layout_width="200dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="10dp"
                 android:background="@color/morelightgray"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="6px"
+                android:background="@color/gray"
+                android:layout_marginTop="10dp"
                 />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
                 android:layout_marginTop="10dp"
-                android:text="주소" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:id="@+id/info_addr"
-                android:text="00시 00구 00동 도로명주소 또는 번지주소" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/gray"
-                android:layout_marginTop="10dp"
+                android:textSize="20dp"
                 android:text="이용 후기" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:layout_marginTop="10dp"
                 android:text="이용 후기(작성 내용)" />
         </LinearLayout>
     </ScrollView>
