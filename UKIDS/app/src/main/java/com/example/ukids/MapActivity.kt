@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukids.databinding.ActivityMapBinding
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -26,6 +27,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -97,8 +99,38 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 Log.d("mobileApp", "${tempmarkerOptions!!.position}")
                 addPlace(tempmarkerOptions!!.position)
             }
-
         }
+
+        // chip을 이용한 맵 마커 필터링 기능
+        binding.mapChipgroup.setOnCheckedStateChangeListener(
+            object : ChipGroup.OnCheckedStateChangeListener {
+                override fun onCheckedChanged(group: ChipGroup, checkedIds: MutableList<Int>) {
+                    googleMap!!.clear()
+                    var resarr = arrayListOf<myRow>()
+                    if (binding.mapPlayground.isChecked) {
+                        Log.d("mobileApp", "놀이터 선택")
+                        addMarkers(playgrounds, 50.toFloat())
+                        resarr.addAll(playgrounds)
+                    }
+                    if (binding.mapKidscafe.isChecked) {
+                        Log.d("mobileApp", "키즈카페 선택")
+                        resarr.addAll(kidscafes)
+                        addMarkers(kidscafes, 30.toFloat())
+                    }
+                    if (binding.mapLib.isChecked) {
+                        Log.d("mobileApp", "도서관 선택")
+                        resarr.addAll(libs)
+                        addMarkers(libs, 80.toFloat())
+                    }
+                    if (checkedIds == null) {
+                        addMarkers(playgrounds, 50.toFloat())
+                        addMarkers(kidscafes, 30.toFloat())
+                        addMarkers(libs, 80.toFloat())
+                    }
+                }
+            }
+
+        )
     }
 
     override fun onMapReady(p0: GoogleMap) {

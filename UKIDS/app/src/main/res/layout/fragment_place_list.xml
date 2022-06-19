@@ -21,29 +21,36 @@
             app:layout_constraintTop_toTopOf="@id/mapView"
             app:layout_constraintLeft_toLeftOf="@id/mapView">
             <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
-                android:id="@+id/placelist_playground"
-                android:text="놀이터/공원" />
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:id="@+id/placelist_lib"
-                android:text="도서관" />
-            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="도서관"
+                app:chipBackgroundColor="@color/yellowgreen" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/placelist_playground"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="놀이터/공원"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/placelist_kidscafe"
-                android:text="키즈카페" />
-            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:text="키즈카페"
+                app:chipBackgroundColor="@color/orange" />
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/placelist_ukidszone"
-                android:text="유키즈존" />
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="유키즈존"
+                app:chipBackgroundColor="@color/lightyellow" />
         </com.google.android.material.chip.ChipGroup>
 
         <androidx.recyclerview.widget.RecyclerView

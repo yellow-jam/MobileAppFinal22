@@ -166,7 +166,7 @@ class PlaceListFragment : Fragment() {
         //val returnType = arguments?.getString("returnType")
 
 
-        // 필터링 기능
+        // chip을 이용한 리사이클러뷰 필터링 기능
         binding.placelistChipgroup.setOnCheckedStateChangeListener(
             object : ChipGroup.OnCheckedStateChangeListener {
                 override fun onCheckedChanged(group: ChipGroup, checkedIds: MutableList<Int>) {
@@ -180,8 +180,11 @@ class PlaceListFragment : Fragment() {
                         resarr.addAll(kidscafes)
                     }
                     if (binding.placelistLib.isChecked) {
-                        Log.d("mobileApp", "키즈카페 선택")
+                        Log.d("mobileApp", "도서관 선택")
                         resarr.addAll(libs)
+                    }
+                    if (checkedIds == null) {
+                        resarr.addAll(datas)
                     }
                     binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
                     binding.PlaceListRecyclerView.adapter = XmlAdapter(requireActivity(), resarr)
@@ -189,10 +192,7 @@ class PlaceListFragment : Fragment() {
 
                 }
             }
-
         )
-
-
         return binding.root
     }
 

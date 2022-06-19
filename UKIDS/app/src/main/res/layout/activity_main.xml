@@ -28,12 +28,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="지도"
+            android:fontFamily="@font/nanumsquareroundr"
             android:id="@+id/btn_map"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="로그인"
+            android:fontFamily="@font/nanumsquareroundr"
             android:id="@+id/btn_auth"
             />
 

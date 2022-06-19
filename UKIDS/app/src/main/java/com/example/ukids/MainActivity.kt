@@ -85,17 +85,13 @@ class MainActivity : AppCompatActivity() {
         if(MyApplication.checkAuth() || MyApplication.email != null){ // 검증된 이메일인가
             // 로그인 상태
             binding.btnAuth.text = "로그아웃"
-            //binding.authTv.text = "${MyApplication.email}님 반갑습니다."
-            //binding.authTv.textSize = 16F
             val username: TextView = binding.mainDrawerView.getHeaderView(0).findViewById(R.id.nav_username)
-            username.setText("${MyApplication.email}님")
+            username.setText("${MyApplication.email}")
 
         }
         else{
             // 로그아웃 상태
             binding.btnAuth.text = "로그인"
-            //binding.authTv.text = "덕성 모바일"
-            //binding.authTv.textSize = 24F
         }
     }
 

@@ -40,6 +40,6 @@ class SplashActivity : AppCompatActivity() {
                 }
 
             }
-        }, 2, TimeUnit.SECONDS)  // 2초 후에 실행
+        }, 3, TimeUnit.SECONDS)  // 3초 후에 실행
     }
 }
