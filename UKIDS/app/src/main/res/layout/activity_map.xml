@@ -148,6 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginTop="10dp"
+                android:id="@+id/info_content"
                 android:text="이용 후기(작성 내용)" />
         </LinearLayout>
     </ScrollView>

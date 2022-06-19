@@ -67,17 +67,8 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
         }
 
-        binding.btnAuth.setOnClickListener {
-            val intent = Intent(this, AuthActivity::class.java)
-            if(binding.btnAuth.text.equals("로그인")) // 로그아웃 상태
-                intent.putExtra("data", "logout")
-            else if(binding.btnAuth.text.equals("로그아웃")) // 로그인 상태
-                intent.putExtra("data", "login")
-            startActivity(intent)
-            overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
-        }
-
     }
+
 
     // AuthActivity에서 돌아온 후
     override fun onStart() {
@@ -94,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             binding.btnAuth.text = "로그인"
         }
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)) return true // 11-6 토글 - 햄버거 버튼이 눌렸다면 true

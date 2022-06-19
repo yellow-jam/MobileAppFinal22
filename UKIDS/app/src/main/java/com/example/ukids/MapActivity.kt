@@ -49,6 +49,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     var tempmarkerOptions: Marker? = null
 
+    lateinit var requestLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("mobileApp", "onCreate")
         super.onCreate(savedInstanceState)
@@ -131,6 +133,35 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             }
 
         )
+
+        // AddActivity로 전환 및 사후처리
+        requestLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            Log.d("mobileApp", "MapActivity 사후처리 메소드")
+
+            val placename = it.data!!.getStringExtra("placename")!!
+            val placetype = it.data!!.getStringExtra("placetype")!!
+            val addr = it.data!!.getStringExtra("addr")
+            val lat = it.data!!.getStringExtra("lat")
+            val lng = it.data!!.getStringExtra("lng")
+            val content = it.data!!.getStringExtra("content")
+            // 데이터 추가
+            datas.add(myRow(placename, placetype, "", addr, lat, lng, "", ""))
+
+            // 마커 추가
+            val m = MarkerOptions().title(placename)
+            m.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+            m.position(LatLng(lat!!.toDouble(), lng!!.toDouble()))
+            tempmarkerOptions = googleMap?.addMarker(m)
+
+            // 하단의 스크롤뷰에 상세정보를 띄운다
+            binding.fabAdd.visibility = View.GONE
+            binding.placeInfo.visibility = View.VISIBLE
+            binding.fabStar.visibility = View.VISIBLE
+            findViewById<TextView>(R.id.info_placename).setText(placename)
+            findViewById<TextView>(R.id.info_placetype).setText(placetype)
+            findViewById<TextView>(R.id.info_addr).setText(addr)
+            findViewById<TextView>(R.id.info_content).setText(content)
+        }
     }
 
     override fun onMapReady(p0: GoogleMap) {
@@ -161,9 +192,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 }
 
                 // 마커가 클릭되면 하단의 스크롤뷰에 상세정보를 띄운다
-                findViewById<ExtendedFloatingActionButton>(R.id.fab_add).visibility = View.GONE
-                findViewById<ScrollView>(R.id.place_info).visibility = View.VISIBLE
-                findViewById<ExtendedFloatingActionButton>(R.id.fab_star).visibility = View.VISIBLE
+                binding.fabAdd.visibility = View.GONE
+                binding.placeInfo.visibility = View.VISIBLE
+                binding.fabStar.visibility = View.VISIBLE
                 findViewById<TextView>(R.id.info_placename).setText(p0.title)  // 마커의 타이틀과 같은 장소명을 가진 데이터를 찾아온다
                 for (i in 0 until datas.size) {
                     if (datas[i].placename==p0.title){
@@ -199,34 +230,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         })
     }
 
-    val requestLauncher: ActivityResultLauncher<Intent>
-            = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        Log.d("mobileApp", "사후처리 메소드")
-        Log.d("mobileApp", "${it.data!!.getStringExtra("placename")}")
-        Log.d("mobileApp", "${it.data!!.getStringExtra("placetype")}")
-        Log.d("mobileApp", "${it.data!!.getStringExtra("addr")}")
-        Log.d("mobileApp", "${it.data!!.getStringExtra("content")}")
-
-        val placename = it.data!!.getStringExtra("placename")!!
-        val placetype = it.data!!.getStringExtra("placetype")!!
-        val addr = it.data!!.getStringExtra("addr")
-        val lat = it.data!!.getStringExtra("lat")
-        val lng = it.data!!.getStringExtra("lng")
-        // 데이터 추가
-        datas.add(myRow(placename, placetype, "", addr, lat, lng, "", ""))
-
-        // 마커 추가
-        val m = MarkerOptions().title(placename)
-        m.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-        m.position(LatLng(lat!!.toDouble(), lng!!.toDouble()))
-        tempmarkerOptions = googleMap?.addMarker(m)
-    }
-
 
     private fun addPlace(latLng: LatLng) {
         var addr: String = ""
 
-        // 좌표 -> 주소 변환 api
+        // 위도경도 좌표를 주소로 변환하는 카카오 api 요청
         /*
         val call: Call<C2R> = MyApplication.networkServiceC2R.getCoord2Address(
             "KakaoAK 7b133b534b22adc5d90927bc83653849",
