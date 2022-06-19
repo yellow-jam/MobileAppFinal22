@@ -68,14 +68,14 @@ class AuthActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {
                 if (binding.authEmailEditView.text != null && binding.authPasswordEditView.text.length > 5) {
-                    binding.signBtn.setClickable(true);
+                    binding.signBtn.isEnabled = true
                     binding.signBtn.setBackgroundColor(resources.getColor(R.color.yellow));
-                    binding.loginBtn.setClickable(true);
+                    binding.loginBtn.isEnabled = true
                     binding.loginBtn.setBackgroundColor(resources.getColor(R.color.yellow));
                 } else {
-                    binding.signBtn.setClickable(false);
+                    binding.signBtn.isEnabled = false
                     binding.signBtn.setBackgroundColor(resources.getColor(R.color.lightgray));
-                    binding.loginBtn.setClickable(false);
+                    binding.loginBtn.isEnabled = false
                     binding.loginBtn.setBackgroundColor(resources.getColor(R.color.lightgray));
                 }
             }

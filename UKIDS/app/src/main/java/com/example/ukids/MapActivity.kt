@@ -124,7 +124,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                         resarr.addAll(libs)
                         addMarkers(libs, 80.toFloat())
                     }
-                    if (checkedIds == null) {
+                    if (checkedIds[0] == null) {
                         addMarkers(playgrounds, 50.toFloat())
                         addMarkers(kidscafes, 30.toFloat())
                         addMarkers(libs, 80.toFloat())
@@ -136,6 +136,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
         // AddActivity로 전환 및 사후처리
         requestLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            tempmarkerOptions = null
             Log.d("mobileApp", "MapActivity 사후처리 메소드")
 
             val placename = it.data!!.getStringExtra("placename")!!
@@ -147,11 +148,17 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             // 데이터 추가
             datas.add(myRow(placename, placetype, "", addr, lat, lng, "", ""))
 
+            val hue = when(placetype) {
+                "놀이터" -> 50.toFloat()
+                "도서관" -> 80.toFloat()
+                "키즈카페" -> 30.toFloat()
+                else -> 160.toFloat()
+            }
             // 마커 추가
-            val m = MarkerOptions().title(placename)
-            m.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+            val m = MarkerOptions()
+            m.icon(BitmapDescriptorFactory.defaultMarker(hue))
             m.position(LatLng(lat!!.toDouble(), lng!!.toDouble()))
-            tempmarkerOptions = googleMap?.addMarker(m)
+            m.title(placename)
 
             // 하단의 스크롤뷰에 상세정보를 띄운다
             binding.fabAdd.visibility = View.GONE
@@ -177,6 +184,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             override fun onMarkerClick(p0: Marker): Boolean {
 
                 if (p0.title=="현 위치") { // 현 위치를 나타내는 마커라면 장소 추가 버튼 활성화
+                    Log.d("mobileApp", "현위치마커클릭")
                     tempmarkerOptions?.remove()
                     binding.fabAdd.visibility = View.VISIBLE
                     binding.placeInfo.visibility = View.GONE
@@ -185,12 +193,14 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 }
 
                 if (p0==tempmarkerOptions) {
+                    Log.d("mobileApp", "temp마커클릭")
                     binding.fabAdd.visibility = View.VISIBLE
                     binding.placeInfo.visibility = View.GONE
                     binding.fabStar.visibility = View.GONE
                     return false
                 }
 
+                Log.d("mobileApp", "일반마커클릭")
                 // 마커가 클릭되면 하단의 스크롤뷰에 상세정보를 띄운다
                 binding.fabAdd.visibility = View.GONE
                 binding.placeInfo.visibility = View.VISIBLE
@@ -204,6 +214,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 }
                 findViewById<TextView>(R.id.info_placetype).setText(datas[index].placetype)
                 findViewById<TextView>(R.id.info_addr).setText(datas[index].addr ?: datas[index].road_addr)
+                findViewById<TextView>(R.id.info_content).setText("")
 
                 return false
             }
@@ -219,12 +230,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 binding.fabStar.visibility = View.GONE
 
                 // 클릭한 위치를 마커로 표시
-                tempmarkerOptions?.remove()
+                tempmarkerOptions?.remove()  // 직전에 생성된 마커를 지움
                 markerOptions = MarkerOptions()
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(20F))
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
                 markerOptions.position(latLng!!)
 
-                tempmarkerOptions = googleMap?.addMarker(markerOptions)
+                tempmarkerOptions = googleMap?.addMarker(markerOptions)  // 일시적으로 생성된 마커를 tempmarterOptions에 보관
                 Log.d("mobileApp", "$latLng")
             }
         })
@@ -235,7 +246,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         var addr: String = ""
 
         // 위도경도 좌표를 주소로 변환하는 카카오 api 요청
-        /*
+
         val call: Call<C2R> = MyApplication.networkServiceC2R.getCoord2Address(
             "KakaoAK 7b133b534b22adc5d90927bc83653849",
             latLng.longitude.toString(),
@@ -255,7 +266,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             }
         })
         Log.d("mobileApp", "api 요청 이후...")
-        */
+
 
         val intent = Intent(this@MapActivity, AddActivity::class.java)
         //intent.putExtra("addr", addr)
@@ -279,7 +290,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         googleMap!!.moveCamera(CameraUpdateFactory.newCameraPosition(position))
         // 현위치 마커 추가
         val markerOp = MarkerOptions()
-        markerOp.icon(BitmapDescriptorFactory.defaultMarker(20.toFloat()))
+        markerOp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
         markerOp.position(latLng)
         markerOp.title("현 위치")
         googleMap?.addMarker(markerOp)
@@ -345,7 +356,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
             "xml",
             1,
-            30
+            50
         )
 
         call3?.enqueue(object : Callback<responseInfo3> {

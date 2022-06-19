@@ -183,7 +183,7 @@ class PlaceListFragment : Fragment() {
                         Log.d("mobileApp", "도서관 선택")
                         resarr.addAll(libs)
                     }
-                    if (checkedIds == null) {
+                    if (checkedIds[0] == null) {
                         resarr.addAll(datas)
                     }
                     binding.PlaceListRecyclerView.layoutManager = LinearLayoutManager(activity)
