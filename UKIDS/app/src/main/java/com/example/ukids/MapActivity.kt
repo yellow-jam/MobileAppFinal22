@@ -457,7 +457,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     override fun onBackPressed() {
         super.onBackPressed()
-        overridePendingTransition(0, 0);
+        overridePendingTransition(0, 0);  // 액티비티 화면 전환 애니메이션 제거
     }
 
 }

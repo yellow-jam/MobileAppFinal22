@@ -18,6 +18,9 @@
         android:theme="@style/Theme.UKIDS"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".MypageActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddActivity"
             android:exported="false" />
         <activity
