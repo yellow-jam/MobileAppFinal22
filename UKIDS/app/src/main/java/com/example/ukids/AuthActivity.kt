@@ -1,15 +1,14 @@
 package com.example.ukids
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.ukids.databinding.ActivityAuthBinding
-
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 
@@ -126,8 +125,9 @@ class AuthActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, "로그아웃 성공", Toast.LENGTH_SHORT).show()
                 }
             }
-            startActivity(Intent(this@AuthActivity, SplashActivity::class.java))
-            finish()  // 메인액티비티로 돌아감
+            val i = Intent(this@AuthActivity, SplashActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(i)
         }
 
         /* 카카오 로그인 */

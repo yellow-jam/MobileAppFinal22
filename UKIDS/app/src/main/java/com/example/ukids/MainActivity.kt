@@ -75,14 +75,14 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         if(MyApplication.checkAuth() || MyApplication.email != null){ // 검증된 이메일인가
             // 로그인 상태
-            binding.btnAuth.text = "로그아웃"
+            //binding.btnAuth.text = "로그아웃"
             val username: TextView = binding.mainDrawerView.getHeaderView(0).findViewById(R.id.nav_username)
             username.setText("${MyApplication.email}")
 
         }
         else{
             // 로그아웃 상태
-            binding.btnAuth.text = "로그인"
+            //binding.btnAuth.text = "로그인"
         }
     }
 
