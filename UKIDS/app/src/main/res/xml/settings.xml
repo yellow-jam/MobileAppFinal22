@@ -4,9 +4,9 @@
     <PreferenceCategory
         app:key="notification"
         app:title="알림 설정">
-        <SwitchPreference
-            app:key="note_message"
-            app:title="메시지 알림" />
+        <SwitchPreferenceCompat
+            app:key="noti_noti"
+            app:title="푸시 알림 설정" />
         <SwitchPreferenceCompat
             app:key="noti_sound"
             app:title="소리 알림" />

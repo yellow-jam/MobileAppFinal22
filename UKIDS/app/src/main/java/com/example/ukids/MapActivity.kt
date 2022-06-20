@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.location.Location
 import android.media.AudioAttributes
@@ -18,7 +17,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -26,9 +24,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.NotificationCompat
-import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
 import com.example.ukids.databinding.ActivityMapBinding
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -38,7 +36,6 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -117,24 +114,30 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         binding.mapChipgroup.setOnCheckedStateChangeListener(
             object : ChipGroup.OnCheckedStateChangeListener {
                 override fun onCheckedChanged(group: ChipGroup, checkedIds: MutableList<Int>) {
+                    var flag=true
                     googleMap!!.clear()
+                    googleMap?.addMarker(markerOp)
                     var resarr = arrayListOf<myRow>()
                     if (binding.mapPlayground.isChecked) {
                         Log.d("mobileApp", "놀이터 선택")
                         addMarkers(playgrounds, 50.toFloat())
                         resarr.addAll(playgrounds)
+                        flag=false
                     }
                     if (binding.mapKidscafe.isChecked) {
                         Log.d("mobileApp", "키즈카페 선택")
                         resarr.addAll(kidscafes)
                         addMarkers(kidscafes, 30.toFloat())
+                        flag=false
                     }
                     if (binding.mapLib.isChecked) {
                         Log.d("mobileApp", "도서관 선택")
                         resarr.addAll(libs)
                         addMarkers(libs, 80.toFloat())
+                        flag=false
                     }
-                    if (checkedIds[0] == null) {
+                    if (flag) {
+                        resarr.addAll(datas)
                         addMarkers(playgrounds, 50.toFloat())
                         addMarkers(kidscafes, 30.toFloat())
                         addMarkers(libs, 80.toFloat())
@@ -157,8 +160,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             val content = it.data!!.getStringExtra("content")
             // 데이터 추가
             datas.add(myRow(placename, placetype, "", addr, lat, lng, "", ""))
-            // 알림 발생: 추가 성공
-            notificationRing(placename)
+            // 알림 발생: 장소 추가 성공
+            val preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if (preferences.getBoolean("noti_noti", false)) {
+                if(preferences.getBoolean("noti_sound", false)) {
+                        notificationRing(placename)
+                    }
+                else {
+                    notificationQuiet(placename)
+                }
+            }
 
             val hue = when(placetype) {
                 "놀이터" -> 50.toFloat()
@@ -184,6 +195,14 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     }
 
+    fun setPinColor(): Float {
+        val colorpreference = PreferenceManager.getDefaultSharedPreferences(this)
+        val hue = (colorpreference.getString("color", "240"))?.toFloat() ?: 130.toFloat()
+        return hue
+
+    }
+
+
     fun notificationRing(placename: String) {
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val builder : NotificationCompat.Builder // 버전에 따라 초기화 필요
@@ -194,8 +213,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             // 알림 상세 설정
             channel.description = "addPlace - 장소 추가" // 알림 설명 문자열
             channel.setShowBadge(true) // 앱 아이콘에 알림 뱃지 출력 여부
-            channel.enableLights(true) // led 불빛 알림
-            channel.lightColor = Color.RED  // led 색상
             channel.enableVibration(true) // 진동 알림
             channel.vibrationPattern = longArrayOf(100,200,100,200) // 진동 알림 패턴
             // (100, 200), (100, 200) : (진동 x 시간, 진동 시간) 단위 msec(밀리초)
@@ -207,6 +224,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                 .setUsage(AudioAttributes.USAGE_ALARM)
                 .build()
             channel.setSound(uri, audio_attr) // (uri, 오디오 속성)
+
 
             // 채널을 매니저에 등록
             manager.createNotificationChannel(channel)
@@ -229,6 +247,40 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         /* 알림 발생 */
         manager.notify(11, builder.build())
     }
+
+    fun notificationQuiet(placename: String) {
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val builder : NotificationCompat.Builder // 버전에 따라 초기화 필요
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {  // 버전 26 이상
+            val ch_id = "add-channel"
+            val channel = NotificationChannel(ch_id, "addPlace", NotificationManager.IMPORTANCE_DEFAULT)  // (id, 이름, 중요도)
+
+            // 알림 상세 설정
+            channel.description = "addPlace - 장소 추가" // 알림 설명 문자열
+            channel.setShowBadge(true) // 앱 아이콘에 알림 뱃지 출력 여부
+
+            // 채널을 매니저에 등록
+            manager.createNotificationChannel(channel)
+            builder = NotificationCompat.Builder(this, ch_id)
+        } else {  // 버전 25 이하
+            builder = NotificationCompat.Builder(this)
+        }
+
+        // 알림 객체 설정
+        builder.setSmallIcon(R.drawable.logo_fore_small)
+        builder.setWhen(System.currentTimeMillis()) // 시각 출력(현재 시각)
+        builder.setContentTitle("유키즈존 제보 완료!") // 알림 본문
+        builder.setContentText("${placename}의 위치를 제보했어요.")
+
+        // 알림 터치 이벤트 - 브로드캐스트 설정 필요
+        val replyIntent = Intent(this, MyReceiver::class.java)
+        val replyPendingIntent = PendingIntent.getBroadcast(this, 30, replyIntent, PendingIntent.FLAG_MUTABLE)
+        builder.setContentIntent(replyPendingIntent)
+
+        /* 알림 발생 */
+        manager.notify(11, builder.build())
+    }
+
 
     override fun onMapReady(p0: GoogleMap) {
         Log.d("mobileApp", "onMapReady")
@@ -337,7 +389,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     }
 
-
+    lateinit var markerOp: MarkerOptions
     private fun moveMap(latitude:Double, longitude:Double){
         Log.d("mobileApp", "moveMap")
         // googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE  // 위성 지도 모드
@@ -350,8 +402,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         // 카메라 이동
         googleMap!!.moveCamera(CameraUpdateFactory.newCameraPosition(position))
         // 현위치 마커 추가
-        val markerOp = MarkerOptions()
-        markerOp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
+        markerOp = MarkerOptions()
+        markerOp.icon(BitmapDescriptorFactory.defaultMarker(setPinColor())) // 현위치 핀 색 지정
         markerOp.position(latLng)
         markerOp.title("현 위치")
         googleMap?.addMarker(markerOp)
@@ -364,7 +416,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
             "pYVi5WRhkWtEwEK/I4kgN7b4rNT0ilJBAD0ZrcvBAAFFgV3kqfOSQ9cQn5eEczFo+9O1Q1g5b0UiGp10XfJcOA==",
             "xml",
             1,
-            30
+            60
         )
 
         call1?.enqueue(object : Callback<responseInfo1> {
